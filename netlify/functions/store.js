@@ -1,9 +1,11 @@
-const { getStore } = require("@netlify/blobs");
+const { connectLambda, getStore } = require("@netlify/blobs");
 
-exports.handler = async (event, context) => {
-  // Netlify Blobs requires the context object to inject site credentials.
-  // When deployed on Netlify, context is automatically populated.
-  const store = getStore({ name: "block-party", context });
+exports.handler = async (event) => {
+  // Lambda compatibility mode requires connectLambda to inject
+  // the Netlify Blobs environment credentials from the event.
+  connectLambda(event);
+
+  const store = getStore("block-party");
 
   try {
     if (event.httpMethod === "GET") {
